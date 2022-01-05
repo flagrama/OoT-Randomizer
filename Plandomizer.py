@@ -741,11 +741,7 @@ class WorldDistribution(object):
             5: The rest of the Item pool
         """
         world = worlds[self.id]
-        locations = {}
-        if self.locations:
-            locations = {loc: self.locations[loc] for loc in random.sample(sorted(self.locations), len(self.locations))}
-        used_items = []
-        for (location_name, record) in self.pattern_dict_items(locations):
+        for (location_name, record) in self.pattern_dict_items(self.locations):
             if record.item is None:
                 continue
             valid_items = []
