@@ -1792,10 +1792,6 @@ skip_GS_BGS_text:
 ; Patches.py imports
 ;==================================================================================================
 
-; Remove intro cutscene
-.orga 0xB06BB8
-    li      t9, 0
-
 ; Change Bombchu Shop to be always open
 .orga 0xC6CEDC
     li      t3, 1

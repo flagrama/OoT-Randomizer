@@ -36,7 +36,7 @@
     "no_escape_sequence": true,
     "no_guard_stealth": true,
     "no_epona_race": false,
-    "useful_cutscenes": true,
+    "cutscene_settings": ["useful"],
     "fast_chests": true,
     "free_scarecrow": false,
     "start_with_rupees": false,

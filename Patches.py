@@ -334,6 +334,10 @@ def patch_rom(spoiler: Spoiler, world: World, rom: Rom) -> Rom:
     rom.write_bytes(0xCD5E76, [0x0E, 0xDC])
     rom.write_bytes(0xCD5E12, [0x0E, 0xDC])
 
+    # Remove intro cutscene
+    if 'story' not in world.settings.cutscene_settings or world.settings.starting_age == 'adult':
+        rom.write_bytes(0xB06BB8, [0x24, 0x19, 0x00, 0x00])  # li      t9, 0
+
     # Cutscene for all medallions never triggers when leaving shadow or spirit temples (hopefully stops warp to colossus on shadow completion with boss reward shuffle)
     rom.write_byte(0xACA409, 0xAD)
     rom.write_byte(0xACA49D, 0xCE)
@@ -564,6 +568,8 @@ def patch_rom(spoiler: Spoiler, world: World, rom: Rom) -> Rom:
 
     rom.write_int32s(0x025313D0, [0x00000056, 0x00000001])  # Music Change, Count
     rom.write_int16s(None, [0x003B, 0x0021, 0x0022, 0x0000])  # action, start, end, ????
+
+
 
     # Speed scene after Deku Tree
     rom.write_bytes(0x2077E20, [0x00, 0x07, 0x00, 0x01, 0x00, 0x02, 0x00, 0x02])
@@ -1144,7 +1150,7 @@ def patch_rom(spoiler: Spoiler, world: World, rom: Rom) -> Rom:
     save_context = SaveContext()
 
     # Initial Save Data
-    if not world.settings.useful_cutscenes and 'Forest Temple' not in world.settings.dungeon_shortcuts:
+    if 'useful' not in world.settings.cutscene_settings and 'Forest Temple' not in world.settings.dungeon_shortcuts:
         save_context.write_bits(0x00D4 + 0x03 * 0x1C + 0x04 + 0x0, 0x08)  # Forest Temple switch flag (Poe Sisters cutscene)
 
     if 'Deku Tree' in world.settings.dungeon_shortcuts:
@@ -1251,7 +1257,7 @@ def patch_rom(spoiler: Spoiler, world: World, rom: Rom) -> Rom:
     save_context.write_bits(0x0EF9, 0x01)  # "Greeted by Saria"
     save_context.write_bits(0x0F0A, 0x04)  # "Spoke to Ingo Once as Adult"
     save_context.write_bits(0x0F0F, 0x40)  # "Met Poe Collector in Ruined Market"
-    if not world.settings.useful_cutscenes:
+    if 'useful' not in world.settings.cutscene_settings:
         save_context.write_bits(0x0F1A, 0x04)  # "Met Darunia in Fire Temple"
 
     save_context.write_bits(0x0ED7, 0x01)  # "Spoke to Child Malon at Castle or Market"

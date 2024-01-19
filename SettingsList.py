@@ -3044,13 +3044,23 @@ class SettingInfos:
         shared         = True,
     )
 
-    useful_cutscenes = Checkbutton(
-        gui_text       = 'Enable Specific Glitch-Useful Cutscenes',
+    cutscene_settings = MultipleSelect(
+        gui_text       = 'Choose which cutscenes you want to see.',
+        default        = [],
+        choices        = {
+            'useful': 'Useful',
+            'story':  'Story',
+        },
         gui_tooltip    = '''\
-            The cutscenes of the Poes in Forest Temple and Darunia in
+            'None': All of the cutscenes will be disabled.
+        
+            'Useful': The cutscenes of the Poes in Forest Temple and Darunia in
             Fire Temple will not be skipped. These cutscenes are useful
             in glitched gameplay only and do not provide any timesave
             for glitchless playthroughs.
+            
+            'Story': All of the cutscenes will be enabled so that the vanilla 
+            story will be somewhat preserved.
         ''',
         shared         = True,
     )
