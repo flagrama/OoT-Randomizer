@@ -2953,10 +2953,10 @@ courtyard_guards_kill:
 ; In Dungeon ER, open Deku Tree's mouth as adult if Mido has been shown the sword/shield.
 ;==================================================================================================
 .orga 0xC72C64
-    jal     deku_mouth_condition
+    jal     deku_mouth_condition    ; overrides age check
     move    a0, s0
     lui     a1, 0x808D
-    bnez_a  t7, 0xC72C8C
+    bnez_a  t7, 0xC72C8C            ; invert branch condition
     nop
 
 ;==================================================================================================

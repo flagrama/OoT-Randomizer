@@ -1241,8 +1241,9 @@ def patch_rom(spoiler: Spoiler, world: World, rom: Rom) -> Rom:
     save_context.write_bits(0x00D4 + 0x5F * 0x1C + 0x04 + 0x3, 0x20) # Hyrule Castle switch flag (Owl)
     save_context.write_bits(0x0F2B, 0x20) # Spoke to Lake Hylia Owl once
 
-    save_context.write_bits(0x0ED4, 0x10)  # "Met Deku Tree"
-    save_context.write_bits(0x0ED5, 0x20)  # "Deku Tree Opened Mouth"
+    if 'story' not in world.settings.cutscene_settings:
+        save_context.write_bits(0x0ED4, 0x10)  # "Met Deku Tree"
+        save_context.write_bits(0x0ED5, 0x20)  # "Deku Tree Opened Mouth"
     save_context.write_bits(0x0ED6, 0x08)  # "Rented Horse From Ingo"
     save_context.write_bits(0x0ED6, 0x10)  # "Spoke to Mido After Deku Tree's Death"
     save_context.write_bits(0x0EDA, 0x08)  # "Began Nabooru Battle"
