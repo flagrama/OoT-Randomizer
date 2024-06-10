@@ -45,49 +45,49 @@ static void print_msg(const char* s, int* top) {
 }
 
 void draw_file_message(z64_disp_buf_t* db, const z64_menudata_t* menu_data) {
-    if (WORLD_STRING_TXT[0] != '\0') {
-        gDPSetPrimColor(db->p++, 0, 0, 255, 255, 255, 255);
-        int icon_count = 5;
-        int icon_size = 24;
-        int padding = 8;
-        int width = (icon_count * icon_size) + ((icon_count - 1) * padding);
-        int left = (Z64_SCREEN_WIDTH + width) / 2 + padding;
+    if (menu_data->menu_transition == 0) {
+        if (WORLD_STRING_TXT[0] != '\0') {
+            int icon_count = 5;
+            int icon_size = 24;
+            int padding = 8;
+            int width = (icon_count * icon_size) + ((icon_count - 1) * padding);
+            int left = (Z64_SCREEN_WIDTH + width) / 2 + padding;
 
-        text_print_size("World", left, 24 - TEXT_HEIGHT, TEXT_WIDTH);
-        text_print_size(WORLD_STRING_TXT, left, 24, TEXT_WIDTH);
-        text_flush_size(db, TEXT_WIDTH, TEXT_HEIGHT, 0, 0);
-    }
-
-    if (CFG_SHOW_SETTING_INFO) {
-        uint8_t alpha = get_alpha(menu_data);
-        if (alpha > 0) {
-            gDPSetPrimColor(db->p++, 0, 0, 255, 255, 255, alpha);
-            int top = 0x71;
-            int doblank = 0;
-            if (*CFG_CUSTOM_MESSAGE_1) {
-                print_msg(CFG_CUSTOM_MESSAGE_1, &top);
-                doblank = 1;
-            }
-            if (*CFG_CUSTOM_MESSAGE_2) {
-                print_msg(CFG_CUSTOM_MESSAGE_2, &top);
-                doblank = 1;
-            }
-            if (doblank) {
-                print_msg("",                   &top);
-            }
-            print_msg("Generated with OoTR",    &top);
-            print_msg(VERSION_STRING_TXT,       &top);
-            print_msg(TIME_STRING_TXT,          &top);
-            print_msg("",                       &top);
-
-            if (SPOILER_AVAILABLE) {
-                print_msg("Spoiler available",  &top);
-            }
-            if (PLANDOMIZER_USED) {
-                print_msg("Plandomizer",        &top);
-            }
-
+            text_print_size("World", left, 24 - TEXT_HEIGHT, TEXT_WIDTH);
+            text_print_size(WORLD_STRING_TXT, left, 24, TEXT_WIDTH);
             text_flush_size(db, TEXT_WIDTH, TEXT_HEIGHT, 0, 0);
+        }
+
+        if (CFG_SHOW_SETTING_INFO) {
+            uint8_t alpha = get_alpha(menu_data);
+            if (alpha > 0) {
+                int top = 0x71;
+                int doblank = 0;
+                if (*CFG_CUSTOM_MESSAGE_1) {
+                    print_msg(CFG_CUSTOM_MESSAGE_1, &top);
+                    doblank = 1;
+                }
+                if (*CFG_CUSTOM_MESSAGE_2) {
+                    print_msg(CFG_CUSTOM_MESSAGE_2, &top);
+                    doblank = 1;
+                }
+                if (doblank) {
+                    print_msg("",                   &top);
+                }
+                print_msg("Generated with OoTR",    &top);
+                print_msg(VERSION_STRING_TXT,       &top);
+                print_msg(TIME_STRING_TXT,          &top);
+                print_msg("",                       &top);
+
+                if (SPOILER_AVAILABLE) {
+                    print_msg("Spoiler available",  &top);
+                }
+                if (PLANDOMIZER_USED) {
+                    print_msg("Plandomizer",        &top);
+                }
+
+                text_flush_size(db, TEXT_WIDTH, TEXT_HEIGHT, 0, 0);
+            }
         }
     }
 }

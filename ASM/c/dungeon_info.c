@@ -296,13 +296,12 @@ void draw_dungeon_info(z64_disp_buf_t* db) {
         left += icon_size + padding;
 
         // First draw precompleted dungeons, greyed out with a small rectangle to cross them.
-        gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, 0xBF);
         for (int i = 0; i < rows; i++) {
             dungeon_entry_t* d = &(dungeons[i]);
             int empty = CFG_DUNGEON_PRECOMPLETED[d->index];
             if (empty == 1) {
                 int top = start_top + ((icon_size + padding) * i) + 1;
-                int sizeRectangle = text_print_size(d->name, left, top, font_width) * font_width;
+                int sizeRectangle = text_print_size_color(d->name, left, top, font_width, 0xFF, 0xFF, 0xFF, 0xBF) * font_width;
                 gDPSetCombineMode(db->p++, G_CC_PRIMITIVE, G_CC_PRIMITIVE);
                 gSPTextureRectangle(db->p++,
                         left<<2, (top + 5) <<2,
@@ -310,21 +309,13 @@ void draw_dungeon_info(z64_disp_buf_t* db) {
                         0,
                         0, 0,
                         1<<10, 1<<10);
-                gDPPipeSync(db->p++);
                 gDPSetCombineMode(db->p++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
             }
-        }
-        gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, 0x7F);
-        text_flush_size(db, font_width, font_height, 0, 0);
-        // Then the rest in white.
-        gDPSetPrimColor(db->p++, 0, 0, 0xFF, 0xFF, 0xFF, 0xFF);
-        for (int i = 0; i < rows; i++) {
-            dungeon_entry_t* d = &(dungeons[i]);
-            int empty = CFG_DUNGEON_PRECOMPLETED[d->index];
-            if (empty == 0) {
+            else {
                 int top = start_top + ((icon_size + padding) * i) + 1;
-                text_print_size(d->name, left, top, font_width);
+                text_print_size_color(d->name, left, top, font_width, 0xFF, 0xFF, 0xFF, 0xFF);
             }
+            gDPPipeSync(db->p++);
         }
         text_flush_size(db, font_width, font_height, 0, 0);
 

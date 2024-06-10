@@ -12,7 +12,12 @@ typedef struct {
     uint32_t c : 8;
     uint32_t left : 12;
     uint32_t top : 12;
+    colorRGBA8_t color;
 } text_char_t;
+
+uint32_t text_char_t_rgba(text_char_t* text_buf) {
+    return (text_buf->color.r << 24) + (text_buf->color.g << 16) + (text_buf->color.b << 8) + text_buf->color.a;
+}
 
 static text_char_t* text_end = NULL;
 static text_char_t* text_buf = NULL;
@@ -22,7 +27,7 @@ void text_init() {
     text_end = text_buf;
 }
 
-int text_print_size(const char* s, int left, int top, int width) {
+int text_print_size_color(const char* s, int left, int top, int width, uint8_t r, uint8_t g, uint8_t b, uint8_t a) {
     char c;
     int count = 0;
     while (c = *(s++)) {
@@ -30,6 +35,10 @@ int text_print_size(const char* s, int left, int top, int width) {
         text_end->c = c;
         text_end->left = left;
         text_end->top = top;
+        text_end->color.r = r;
+        text_end->color.g = g;
+        text_end->color.b = b;
+        text_end->color.a = a;
         text_end++;
         left += width;
         count++;
@@ -37,11 +46,18 @@ int text_print_size(const char* s, int left, int top, int width) {
     return count;
 }
 
+int text_print_size(const char* s, int left, int top, int width) {
+    return text_print_size_color(s, left, top, width, 255, 255, 255, 255);
+}
+
 int text_print(const char* s, int left, int top) {
     return text_print_size(s, left, top, font_sprite.tile_w);
 }
 
 void text_flush_size(z64_disp_buf_t* db, int width, int height, int hoffset, int voffset) {
+    uint32_t cur_color = text_char_t_rgba(text_buf);
+    gDPSetPrimColor(db->p++, 0, 0, text_buf->color.r, text_buf->color.g, text_buf->color.b, text_buf->color.a);
+
     for (int i = 0; i < text_bucket_count; i++) {
         sprite_load(db, &font_sprite,
                 i * text_bucket_size, text_bucket_size);
@@ -51,6 +67,10 @@ void text_flush_size(z64_disp_buf_t* db, int width, int height, int hoffset, int
             char c = text_p->c;
             int left = text_p->left + hoffset;
             int top = text_p->top + voffset;
+            if (text_char_t_rgba(text_p) != cur_color) {
+                gDPSetPrimColor(db->p++, 0, 0, text_p->color.r, text_p->color.g, text_p->color.b, text_p->color.a);
+                cur_color = text_char_t_rgba(text_p);
+            }
             text_p++;
 
             int bucket = (c - 32) / text_bucket_size;
