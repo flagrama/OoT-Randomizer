@@ -15,7 +15,7 @@ from typing import Any, Optional
 
 import StartingItems
 from version import __version__
-from Utils import readonly_data_path, user_data_path, user_config_path
+from Utils import data_path, user_data_path, user_config_path
 from SettingsList import SettingInfos, validate_settings, settings_versioning
 from Plandomizer import Distribution
 
@@ -66,7 +66,7 @@ def text_to_bit_string(text: str) -> list[int]:
 def get_preset_files() -> list[str]:
     user_presets_dir = user_data_path('Presets')
     os.makedirs(user_presets_dir, mode=0o700, exist_ok=True)
-    return [readonly_data_path('presets_default.json')] + sorted(
+    return [data_path('presets_default.json')] + sorted(
             os.path.join(user_presets_dir, fn)
             for fn in os.listdir(user_presets_dir)
             if fn.endswith('.json'))

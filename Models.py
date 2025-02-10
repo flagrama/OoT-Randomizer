@@ -4,7 +4,7 @@ import random
 from enum import IntEnum
 from typing import TYPE_CHECKING
 
-from Utils import readonly_data_path, user_data_path
+from Utils import data_path, user_data_path
 
 if TYPE_CHECKING:
     from Cosmetics import CosmeticsLog
@@ -493,7 +493,7 @@ def LoadModel(rom: Rom, model: str, age: int) -> int:
     hierarchy = ADULT_HIERARCHY
     postconstantstart = ADULT_POST_START
     pieces = AdultPieces
-    path = readonly_data_path('Models/Adult')
+    path = data_path('Models/Adult')
     skips = adultSkips
     skeleton = adultSkeleton
     agestr = "adult" # Just used for error messages
@@ -503,7 +503,7 @@ def LoadModel(rom: Rom, model: str, age: int) -> int:
         hierarchy = CHILD_HIERARCHY
         postconstantstart = CHILD_POST_START
         pieces = ChildPieces
-        path = readonly_data_path('Models/Child')
+        path = data_path('Models/Child')
         skips = childSkips
         skeleton = childSkeleton
         agestr = "child"

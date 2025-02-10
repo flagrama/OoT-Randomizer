@@ -15,7 +15,7 @@ from MusicHelpers import process_sequence_mmr_zseq, process_sequence_mmrs, proce
 
 from Rom import Rom
 from Sequence import Sequence, SequenceGame
-from Utils import compare_version, readonly_data_path, user_data_path
+from Utils import compare_version, data_path, user_data_path
 
 if TYPE_CHECKING:
     from Cosmetics import CosmeticsLog
@@ -451,7 +451,7 @@ def rebuild_sequences(rom: Rom, sequences: list[Sequence], log: CosmeticsLog, sy
     for i in range(0x6E): # Loop through all the replacement sequences
         j = replacement_dict.get(i if new_sequences[i].size else new_sequences[i].address, None)
         if j and j.game == SequenceGame.MM: # we have at least one MM sequence so load the audiobin
-            with zipfile.ZipFile(os.path.join(readonly_data_path(), 'Music', 'MM.audiobin')) as mm_audiobin_zip:
+            with zipfile.ZipFile(os.path.join(data_path(), 'Music', 'MM.audiobin')) as mm_audiobin_zip:
                 mm_audiobank = bytearray(mm_audiobin_zip.read("Audiobank"))
                 mm_audiobank_index = bytearray(mm_audiobin_zip.read("Audiobank_index"))
                 mm_audiotable = bytearray(mm_audiobin_zip.read("Audiotable"))

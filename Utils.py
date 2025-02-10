@@ -77,7 +77,7 @@ def user_state_path(path: str = '') -> str:
 
 
 def find_user_path(path_type: PathType):
-    test_path = readonly_local_path('')
+    test_path = local_path('')
     if not os.access(test_path, os.W_OK):
         # Cannot write to application directory. Either sandboxed or installed for all users
         if platform.system() == 'Linux':
@@ -104,36 +104,36 @@ def find_user_path(path_type: PathType):
     return test_path
 
 
-def readonly_local_path(path: str = '') -> str:
-    if not hasattr(readonly_local_path, "cached_path"):
-        readonly_local_path.cached_path = None
+def local_path(path: str = '') -> str:
+    if not hasattr(local_path, "cached_path"):
+        local_path.cached_path = None
 
-    if readonly_local_path.cached_path is not None:
-        return os.path.join(readonly_local_path.cached_path, path)
+    if local_path.cached_path is not None:
+        return os.path.join(local_path.cached_path, path)
 
     if is_bundled():
         # we are running in a bundle
-        readonly_local_path.cached_path = os.path.dirname(os.path.realpath(sys.executable))
+        local_path.cached_path = os.path.dirname(os.path.realpath(sys.executable))
     else:
         # we are running in a normal Python environment
-        readonly_local_path.cached_path = os.path.dirname(os.path.realpath(__file__))
+        local_path.cached_path = os.path.dirname(os.path.realpath(__file__))
 
-    return os.path.join(readonly_local_path.cached_path, path)
+    return os.path.join(local_path.cached_path, path)
 
 
-def readonly_data_path(path: str = '') -> str:
-    if not hasattr(readonly_data_path, "cached_path"):
-        readonly_data_path.cached_path = None
+def data_path(path: str = '') -> str:
+    if not hasattr(data_path, "cached_path"):
+        data_path.cached_path = None
 
-    if readonly_data_path.cached_path is not None:
-        return os.path.join(readonly_data_path.cached_path, path)
+    if data_path.cached_path is not None:
+        return os.path.join(data_path.cached_path, path)
 
     # Even if it's bundled we use __file__
     # if it's not bundled, then we want to use the source.py dir + Data
     # if it's bundled, then we want to use the extraction dir + Data
-    readonly_data_path.cached_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
+    data_path.cached_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "data")
 
-    return os.path.join(readonly_data_path.cached_path, path)
+    return os.path.join(data_path.cached_path, path)
 
 
 def default_output_path(path: str) -> str:

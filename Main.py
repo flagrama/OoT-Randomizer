@@ -27,7 +27,7 @@ from Rules import set_rules, set_shop_rules
 from Settings import Settings
 from SettingsList import logic_tricks
 from Spoiler import Spoiler
-from Utils import default_output_path, is_bundled, run_process, readonly_data_path, user_state_path, readonly_local_path
+from Utils import default_output_path, is_bundled, run_process, data_path, user_state_path, local_path
 from World import World
 from version import __version__
 
@@ -136,7 +136,7 @@ def build_world_graphs(settings: Settings) -> list[World]:
             path = 'Glitched World'
         else:
             path = 'World'
-        path = readonly_data_path(path)
+        path = data_path(path)
 
         for filename in ('Overworld.json', 'Bosses.json'):
             savewarps_to_connect += world.load_regions_from_json(os.path.join(path, filename))
@@ -296,7 +296,7 @@ def generate_wad(wad_file: str, rom_file: str, output_file: str, channel_title: 
     else:
         raise RuntimeError('Base WAD file is not a valid OoT USA or JPN wad.')
 
-    gzinject_path = readonly_local_path() if is_bundled() else readonly_local_path("bin/gzinject/")
+    gzinject_path = local_path() if is_bundled() else local_path("bin/gzinject/")
     gzinject_patch_path = gzinject_path + wad_patch_name
     common_key_path = user_state_path()
     if platform.system() == 'Windows':

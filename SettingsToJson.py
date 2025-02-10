@@ -7,7 +7,7 @@ from typing import Any, Optional
 
 from Hints import hint_dist_files
 from SettingsList import SettingInfos, get_settings_from_section, get_settings_from_tab
-from Utils import readonly_data_path
+from Utils import data_path
 
 
 tab_keys: list[str] = ['text', 'app_type', 'footer']
@@ -292,7 +292,7 @@ def main() -> None:
         return get_setting_details(args[arg_index], web_version)
 
     # Don't use user_cache_path because this is pre-generated for releases
-    create_settings_list_json(readonly_data_path('generated/settings_list.json'), web_version)
+    create_settings_list_json(data_path('generated/settings_list.json'), web_version)
 
 
 if __name__ == '__main__':

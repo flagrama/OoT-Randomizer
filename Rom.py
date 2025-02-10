@@ -8,7 +8,7 @@ from collections.abc import Iterator, Sequence
 from typing import Optional
 
 from Models import restrictiveBytes
-from Utils import is_bundled, subprocess_args, readonly_local_path, readonly_data_path, get_version_bytes, \
+from Utils import is_bundled, subprocess_args, local_path, data_path, get_version_bytes, \
     user_cache_path
 from crc import calculate_crc
 from ntype import BigStream
@@ -35,11 +35,11 @@ class Rom(BigStream):
         self.force_patch: list[int] = []
         self.dma: DMAIterator = DMAIterator(self, DMADATA_START)
 
-        with open(readonly_data_path('generated/symbols.json'), 'r') as stream:
+        with open(data_path('generated/symbols.json'), 'r') as stream:
             symbols = json.load(stream)
             self.symbols: dict[str, int] = {name: {'address': int(sym['address'], 16), 'length': sym['length']} for name, sym in symbols.items()}
 
-        with open(readonly_data_path('generated/patch_symbols.json'), 'r') as stream:
+        with open(data_path('generated/patch_symbols.json'), 'r') as stream:
             self.patch_symbols: dict[str, int] = json.load(stream)
 
         if file is None:
@@ -47,7 +47,7 @@ class Rom(BigStream):
 
         decompressed_file: str = user_cache_path('ZOOTDEC.z64')
 
-        os.chdir(readonly_local_path())
+        os.chdir(local_path())
 
         if os.path.isfile(decompressed_file):
             # Try to read from previously decompressed rom if one exists.
