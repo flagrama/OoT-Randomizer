@@ -1,0 +1,76 @@
+name: Build
+on:
+  push:
+    branches: [ "Dev" ]
+  pull_request:
+    branches: [ "Dev" ]
+
+jobs:
+  build-platforms:
+    name: Build N64 platform packages
+    uses: PracticeROM/gz-release/.github/workflows/build-platforms.yml@master
+    with:
+      repository: PracticeROM/gz-release
+      ref: master
+
+  test_assembly_build:
+    name: Build - Assembly
+    needs: build-platforms
+    runs-on: ubuntu-latest
+    container:
+      image: practicerom/practicerom-dev
+    strategy:
+      matrix:
+        python-version: ["3.x"]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create fake base ROM
+        run: dd if=/dev/zero of=ASM/roms/base.z64 bs=32M count=1
+      - name: Run build scripts
+        run: python ASM/build.py --no-compile-c
+  test_C_build:
+    name: Build - C
+    needs: build-platforms
+    runs-on: ubuntu-latest
+    container:
+      image: practicerom/practicerom-dev
+    strategy:
+      matrix:
+        python-version: [ "3.x" ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create fake base ROM
+        run: dd if=/dev/zero of=ASM/roms/base.z64 bs=32M count=1
+      - name: Run build scripts
+        run: python ASM/build.py --diff-only
+  test_full_build:
+    name: Build - Full
+    needs: build-platforms
+    runs-on: ubuntu-latest
+    container:
+      image: practicerom/practicerom-dev
+    strategy:
+      matrix:
+        python-version: [ "3.x" ]
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Create fake base ROM
+        run: dd if=/dev/zero of=ASM/roms/base.z64 bs=32M count=1
+      - name: Run build scripts
+        run: python ASM/build.py
+
